@@ -5,7 +5,7 @@
 
 angular
     .module('WebMIDI', [])
-    // Create a custom service using angular factory
+    // Angular factory returns a sinlgeton
     // $window is a reference to the browser window, this creates a closure
     // $q is a library for working with promises
     .factory('Devices', ['$window', '$q', function($window, $q) {
