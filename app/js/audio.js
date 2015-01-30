@@ -34,6 +34,39 @@ angular
 
         return Gain;
     })
+    .service('LFOAMP', function() {
+        var self;
+
+        function LFOGain(ctx) {
+            self = this;
+            self.gain = ctx.createGain();
+
+            return self;
+        }
+
+        LFOGain.prototype.setVolume = function(volume) {
+            self.gain.gain = volume;
+        }
+        /*
+        LFOGain.prototype.setVolume = function(volume, time) {
+            self.LFOGain.gain.setTargetAtTime(volume, 0, time);
+        }
+        */
+
+        LFOGain.prototype.connect = function(i) {
+            self.gain.connect(i);
+        }
+
+        LFOGain.prototype.cancel = function() {
+            self.gain.gain.cancelScheduledValues(0);
+        }
+
+        LFOGain.prototype.disconnect = function() {
+            self.gain.disconnect(0);
+        }
+
+        return LFOGain;
+    })
     .service('OSC', function() {
         var self;
 
@@ -111,8 +144,53 @@ angular
 
         return Filter;
     })
-    .factory('AudioEngine', ['OSC', 'AMP', 'FTR', '$window', function(Oscillator, Amp, Filter, $window) {
+    // Create an LFO service
+    .service('LFO', function() {
+        var self;
+
+        // Pass in the reference to the audio context
+        // so we can create audo nodes
+        function LFO(ctx){
+            self = this;
+            self.sineLFO = ctx.createOscillator();
+            //self.sineLFOGain = ctx.createGainNode();
+
+            return self;
+        }
+
+        LFO.prototype.setOscType = function(type) {
+            if(type) {
+                self.sineLFO.type = type
+            }
+        }
+
+        LFO.prototype.setFrequency = function(freq) {
+            self.sineLFO.frequency = freq;
+        };
+
+        LFO.prototype.start = function(pos) {
+            self.sineLFO.start(pos);
+        }
+
+        LFO.prototype.stop = function(pos) {
+            self.sineLFO.stop(pos);
+        }
+
+        LFO.prototype.connect = function(i) {
+            self.sineLFO.connect(i);
+        }
+
+        LFO.prototype.cancel = function() {
+            self.sineLFO.frequency.cancelScheduledValues(0);
+        }        
+
+        // Return the function reference in the callback
+        // when the LFO service is injected into the AudioEngine Factory
+        return LFO;
+    })
+    .factory('AudioEngine', ['OSC', 'AMP','LFOAMP', 'FTR', 'LFO', '$window', function(Oscillator, Amp, LFOAmp, Filter, LFO, $window) {
         var self = this;
+
 
         self.activeNotes = [];
         self.settings = {
@@ -140,6 +218,18 @@ angular
             self.osc1.setOscType('sine');
         }
 
+        function _createLFOAmp() {
+            self.LFOAmp = new LFOAmp(self.ctx);
+            self.LFOAmp.setVolume(10);
+        }
+
+        // Create out LFO
+        function _createLFO(){
+            self.LFO = new LFO(self.ctx);
+            self.LFO.setOscType('sine');
+            self.LFO.setFrequency(20);
+        }
+
         function _setAttack(a) {
             if(a) {
                 self.settings.attack = a / 1000;
@@ -159,7 +249,16 @@ angular
         }
 
         function _wire(Analyser) {
+
+            // connect the LFO to the gain node
+            self.LFO.connect(self.LFOAmp.gain);
+
+            self.LFOAmp.connect(self.osc1.osc.frequency);
+            console.log(self.osc1.osc.frequency);
+            // Connect the main osc to the LFO
             self.osc1.connect(self.amp.gain);
+
+            
 
             if(Analyser) {
                 self.analyser = Analyser;
@@ -169,6 +268,7 @@ angular
             }
 
             self.amp.setVolume(0.0, 0); //mute the sound
+            self.LFO.start(0);
             self.osc1.start(0); // start osc1
         }
 
@@ -248,8 +348,14 @@ angular
         return {
             init: function() {
                 _createContext();
+                // Initialize lfo
+                _createLFOAmp();
+                _createLFO();
+
+                // osc1
                 _createAmp();
                 _createOscillators();
+                
                 _createFilters();
             },
             wire: _wire,

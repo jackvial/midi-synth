@@ -6,6 +6,7 @@
 angular
     .module('WebSynth', ['WebMIDI', 'Synth'])
     .controller('WebSynthCtrl', ['$scope', 'Devices', 'DSP', function($scope, devices, DSP) {
+        console.log(devices);
         $scope.devices = [];
         $scope.analyser = null;
 
