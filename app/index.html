@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Toptal Webaudio Demo</title>
+        <title>Web Audio MonoSynth</title>
         <link href="/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
         <style type="text/css">
             #analyser {height: 220px; width: 100%}
@@ -38,6 +38,10 @@
                         {{t}}&nbsp;
                     </label>
                 </div>
+                <h2>LFO</h2>
+                <div class="form-group">
+                    <input type="range" class="form-control" min="-40" max="120" ng-model="synth.lfoFreq" />   
+                </div>
                 <h2>Filter</h2>
                 <div class="form-group">
                     <label>
@@ -48,7 +52,7 @@
                 <div class="form-group">
                     <h3>Filter Type</h3>
                     <label ng-repeat="t in filterTypes">
-                        <input type="radio" name="filterType" ng-model="synth.filterType" value="{{t}}" ng-disabled="!synth.filterOn" ng-checked="synth.filterOn && '{{t}}' === synth.filterType" />
+                        <input type="radio" name="filterType" ng-model="synth.filterType" value="{{t}}" ng-disabled="!synth.filterOn" ng-checked="synth.filterOn &amp;&amp; '{{t}}' === synth.filterType" />
                         {{t}}&nbsp;
                     </label>
                 </div>
