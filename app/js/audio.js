@@ -45,13 +45,8 @@ angular
         }
 
         LFOGain.prototype.setVolume = function(volume) {
-            self.gain.gain = volume;
+            self.gain.gain.value = volume
         }
-        /*
-        LFOGain.prototype.setVolume = function(volume, time) {
-            self.LFOGain.gain.setTargetAtTime(volume, 0, time);
-        }
-        */
 
         LFOGain.prototype.connect = function(i) {
             self.gain.connect(i);
@@ -165,7 +160,8 @@ angular
         }
 
         LFO.prototype.setFrequency = function(freq) {
-            self.sineLFO.frequency = freq;
+            console.log(freq);
+            self.sineLFO.frequency.value = freq;
         };
 
         LFO.prototype.start = function(pos) {
@@ -220,14 +216,12 @@ angular
 
         function _createLFOAmp() {
             self.LFOAmp = new LFOAmp(self.ctx);
-            self.LFOAmp.setVolume(10);
         }
 
         // Create out LFO
         function _createLFO(){
             self.LFO = new LFO(self.ctx);
             self.LFO.setOscType('sine');
-            self.LFO.setFrequency(20);
         }
 
         function _setAttack(a) {
@@ -250,24 +244,30 @@ angular
 
         function _wire(Analyser) {
 
-            // connect the LFO to the gain node
+            // connect the LFO to the LFO gain
             self.LFO.connect(self.LFOAmp.gain);
-
+            
+            // Connect the LFO gain to the main osc
             self.LFOAmp.connect(self.osc1.osc.frequency);
-            console.log(self.osc1.osc.frequency);
+           
             // Connect the main osc to the LFO
             self.osc1.connect(self.amp.gain);
 
-            
-
+            // Check if the analyser exists and connect it
             if(Analyser) {
                 self.analyser = Analyser;
                 self.analyser.connect(self.ctx, self.amp);
             } else {
+
+                // Connect the soc gain to the speaker
                 self.amp.connect(self.ctx.destination);
             }
 
+            // Set the default volume
+            self.LFOAmp.setVolume(50);
             self.amp.setVolume(0.0, 0); //mute the sound
+
+            // Start both oscillators
             self.LFO.start(0);
             self.osc1.start(0); // start osc1
         }
@@ -345,19 +345,21 @@ angular
             }
         }
 
+        // public methods
         return {
             init: function() {
                 _createContext();
-                // Initialize lfo
-                _createLFOAmp();
-                _createLFO();
 
+                // Initialize LFO
+                _createLFO();
+                _createLFOAmp();
+                
                 // osc1
                 _createAmp();
                 _createOscillators();
                 
                 _createFilters();
-            },
+            },     
             wire: _wire,
             noteOn: _noteOn,
             noteOff: _noteOff,
@@ -389,6 +391,12 @@ angular
                 },
                 connect: _connectFilter,
                 disconnect: _disconnectFilter
+            },
+            lfo: {
+                setFrequency: function(f){
+                    //console.log(f);
+                    self.LFO.setFrequency(f);
+                }
             }
         };
     }]);

@@ -62,6 +62,8 @@ angular
         $scope.$watch('synth.attack', DSP.setAttack);
         $scope.$watch('synth.release', DSP.setRelease);
 
+        $scope.$watch('synth.lfoFreq', DSP.setLfoFrequency);
+
         // support for computer keyboard
         $scope.$watch('synth.useKeyboard', DSP.switchKeyboard);
     }]);
