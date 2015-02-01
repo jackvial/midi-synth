@@ -81,7 +81,6 @@ angular
 
         function _onmessage(e) {
             if(e && e.data) {
-                //console.log(e);
                 _onmidimessage(e.data);
             }
         }
@@ -96,8 +95,17 @@ angular
             }
         }
 
+        function _enableLfo(enable) {
+            if(enable !== undefined) {
+                if(enable) {
+                    Engine.lfo.connect();
+                } else {
+                    Engine.lfo.disconnect();
+                }
+            }
+        }
+
         function _setLfoFrequency(f){
-            //console.log(f);
             Engine.lfo.setFrequency(f);
         }
 
@@ -114,6 +122,7 @@ angular
             setFilterFrequency: Engine.filter.setFrequency,
             setFilterResonance: Engine.filter.setResonance,
             switchKeyboard: _switchKeyboard,
-            setLfoFrequency: _setLfoFrequency 
+            setLfoFrequency: _setLfoFrequency,
+            enableLfo: _enableLfo 
         };
     }]);
