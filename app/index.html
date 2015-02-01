@@ -4,6 +4,11 @@
         <title>Web Audio MonoSynth</title>
         <link href="/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
         <style type="text/css">
+        
+            /* Stop Angular double curly braces showing before the page is loaded */
+            [ng-cloak] {
+                display: none !important;
+            }
             #analyser {height: 220px; width: 100%}
             .padded {margin-top: 6px;}
         </style>
@@ -33,13 +38,17 @@
                 <h2>Oscillator</h2>
                 <div class="form-group">
                     <h3>Oscillator Type</h3>
-                    <label ng-repeat="t in oscTypes">
+                    <label ng-repeat="t in oscTypes" ng-cloak>
                         <input type="radio" name="oscType" ng-model="synth.oscType" value="{{t}}" ng-checked="'{{t}}' === synth.oscType" />
                         {{t}}&nbsp;
                     </label>
                 </div>
                 <h2>LFO</h2>
                 <div class="form-group">
+                    <label>
+                        <input type="checkbox" ng-model="synth.lfoOn" />
+                        enable LFO
+                    </label>
                     <input type="range" class="form-control" min="-40" max="120" ng-model="synth.lfoFreq" />   
                 </div>
                 <h2>Filter</h2>
@@ -51,7 +60,7 @@
                 </div>
                 <div class="form-group">
                     <h3>Filter Type</h3>
-                    <label ng-repeat="t in filterTypes">
+                    <label ng-repeat="t in filterTypes" ng-cloak>
                         <input type="radio" name="filterType" ng-model="synth.filterType" value="{{t}}" ng-disabled="!synth.filterOn" ng-checked="synth.filterOn &amp;&amp; '{{t}}' === synth.filterType" />
                         {{t}}&nbsp;
                     </label>

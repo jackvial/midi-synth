@@ -10,8 +10,6 @@ angular
 
         function Analyser(canvas) {
             self = this;
-            console.log('self: ', self);
-            console.log('this: ', this);
 
             self.canvas = angular.element(canvas) || null;
             self.view = self.canvas[0].getContext('2d') || null;

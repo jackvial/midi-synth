@@ -176,6 +176,10 @@ angular
             self.sineLFO.connect(i);
         }
 
+        LFO.prototype.disconnect = function() {
+            self.sineLFO.disconnect(0);
+        }
+
         LFO.prototype.cancel = function() {
             self.sineLFO.frequency.cancelScheduledValues(0);
         }        
@@ -243,13 +247,7 @@ angular
         }
 
         function _wire(Analyser) {
-
-            // connect the LFO to the LFO gain
-            self.LFO.connect(self.LFOAmp.gain);
-            
-            // Connect the LFO gain to the main osc
-            self.LFOAmp.connect(self.osc1.osc.frequency);
-           
+ 
             // Connect the main osc to the LFO
             self.osc1.connect(self.amp.gain);
 
@@ -265,11 +263,31 @@ angular
 
             // Set the default volume
             self.LFOAmp.setVolume(50);
+
+            // Initialize the lfo oscillator
+            self.LFO.start(0);
+
             self.amp.setVolume(0.0, 0); //mute the sound
 
-            // Start both oscillators
-            self.LFO.start(0);
-            self.osc1.start(0); // start osc1
+            // Start osc1
+            self.osc1.start(0); 
+        }
+
+        // Use connect and disconnect to remove
+        // an audo node from the signal path rather than
+        // starting and stoping them
+        function _connectLfo() {
+
+            // connect the LFO to the LFO gain
+            self.LFO.connect(self.LFOAmp.gain);
+            
+            // Connect the LFO gain to the main osc
+            self.LFOAmp.connect(self.osc1.osc.frequency);
+        }
+
+        function _disconnectLfo() {
+            self.LFO.disconnect();
+            self.LFOAmp.disconnect();
         }
 
         function _connectFilter() {
@@ -396,7 +414,9 @@ angular
                 setFrequency: function(f){
                     //console.log(f);
                     self.LFO.setFrequency(f);
-                }
+                },
+                connect: _connectLfo,
+                disconnect: _disconnectLfo
             }
         };
     }]);

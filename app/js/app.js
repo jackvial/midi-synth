@@ -6,7 +6,6 @@
 angular
     .module('WebSynth', ['WebMIDI', 'Synth'])
     .controller('WebSynthCtrl', ['$scope', 'Devices', 'DSP', function($scope, devices, DSP) {
-        console.log(devices);
         $scope.devices = [];
         $scope.analyser = null;
 
@@ -62,6 +61,8 @@ angular
         $scope.$watch('synth.attack', DSP.setAttack);
         $scope.$watch('synth.release', DSP.setRelease);
 
+        // lfo 
+        $scope.$watch('synth.lfoOn', DSP.enableLfo);
         $scope.$watch('synth.lfoFreq', DSP.setLfoFrequency);
 
         // support for computer keyboard
