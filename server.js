@@ -6,8 +6,6 @@
 var express = require('express'),
     app = express();
 
-app.use('/', express.static(__dirname + '/app'));
-app.use('/article', express.static(__dirname + '/article'));
-
+app.use('/', express.static(__dirname + '/'));
 app.listen(process.env.PORT || 3000);
 console.log('server is listening on http://localhost:3000');
