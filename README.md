@@ -1,20 +1,13 @@
-toptal-webaudio-demo
+Web Audio and Midi Demo
 ====================
 
-Demo files supporting the Toptal blog article about webaudio
+This web audio / midi demo is originally by Stéphane P. Péricat and so far I have extended it
+to include an LFO
 
 ##Prerequisites##
  - Google Chrome 39 or above with #enable-web-midi flag activated
- - Some MIDI controller connected to your computer
+ - Some MIDI controller connected to your computer (or just use your keyboard if you don't have one)
 
-##How To Use##
-
-    git clone https://github.com/stephanepericat/toptal-webaudio-demo.git
-    cd toptal-webaudio-demo/
-    npm i && bower i
-    npm start
-
-Go to [http://localhost:3000/](http://localhost:3000/)
 
 ##MIDI Devices##
 
@@ -25,7 +18,11 @@ Remember to connect your MIDI device __before__ starting your browser.
 
 ##Live Demo##
 
-Try it out [here](http://webmididemo.herokuapp.com/)!
+
+Try it out
+
+Extended Version [here](http://jackvial.github.io/webmidi-demo/)
+Original: [here](http://webmididemo.herokuapp.com/)!
 
 ##Computer keyboard support##
 
