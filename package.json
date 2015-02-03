@@ -23,5 +23,9 @@
   "homepage": "https://github.com/stephanepericat/toptal-webaudio-demo",
   "dependencies": {
     "express": "^4.10.4"
+  },
+  "devDependencies": {
+    "gulp": "^3.8.10",
+    "gulp-concat": "^2.4.3"
   }
 }
